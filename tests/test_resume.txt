@@ -1,0 +1,44 @@
+
+张三
+高级Python开发工程师
+
+📧 邮箱: zhangsan@example.com
+📱 电话: 138-0000-0000
+
+📚 教育背景
+北京大学 计算机科学与技术 本科 2015-2019
+- GPA: 3.8/4.0
+- 主修课程: 数据结构、算法、操作系统、计算机网络
+
+💼 工作经历
+ABC科技公司 Python后端工程师 2019.07 - 2022.06
+- 负责公司核心业务系统的后端开发
+- 使用Django REST Framework开发RESTful API
+- 优化数据库查询，性能提升30%
+- 参与系统架构设计和代码审查
+
+XYZ互联网公司 高级Python工程师 2022.07 - 至今
+- 负责微服务架构设计和实现
+- 使用FastAPI开发高性能API
+- 设计并实现分布式缓存系统
+- 带领5人团队完成多个项目
+
+🔧 技术技能
+编程语言: Python, Java, Go, JavaScript
+后端框架: Django, Flask, FastAPI, Spring Boot
+数据库: MySQL, PostgreSQL, MongoDB, Redis
+消息队列: RabbitMQ, Kafka
+容器化: Docker, Kubernetes
+其他: Git, CI/CD, Linux, Nginx
+
+🏆 项目经验
+1. 电商平台后端系统 (2023.01 - 2023.06)
+   - 技术栈: FastAPI + PostgreSQL + Redis + Docker
+   - 职责: 系统架构设计、核心模块开发
+   - 成果: 支撑10万+日活用户
+
+2. 数据分析平台 (2022.09 - 2022.12)
+   - 技术栈: Python + Pandas + Elasticsearch
+   - 职责: 数据处理模块开发
+   - 成果: 数据处理效率提升50%
+    

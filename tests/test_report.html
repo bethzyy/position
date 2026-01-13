@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公司文化与职位匹配分析报告</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .header .timestamp {
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        /* 大标题(报告部分标题) */
+        h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        /* 二级标题(Markdown #) */
+        h2 {
+            color: #764ba2;
+            font-size: 1.6em;
+            margin: 30px 0 15px 0;
+            padding-left: 15px;
+            border-left: 5px solid #764ba2;
+        }
+
+        /* 三级标题(Markdown ##) */
+        h3 {
+            color: #555;
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+            padding-left: 10px;
+            border-left: 3px solid #999;
+        }
+
+        /* 四级标题(Markdown ###) */
+        h4 {
+            color: #666;
+            font-size: 1.15em;
+            margin: 15px 0 8px 0;
+            font-weight: 600;
+        }
+
+        /* 五级标题(Markdown ####) */
+        h5 {
+            color: #777;
+            font-size: 1.05em;
+            margin: 12px 0 6px 0;
+            font-weight: 600;
+        }
+
+        p {
+            margin: 10px 0;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin: 10px 0 10px 30px;
+            line-height: 1.8;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #444;
+        }
+
+        strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* 评分和状态样式 */
+        .score {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        /* 优势/劣势标记 */
+        .pros {
+            color: #28a745;
+        }
+
+        .cons {
+            color: #dc3545;
+        }
+
+        /* 警告标记 */
+        .warning {
+            color: #ffc107;
+        }
+
+        .sources {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .sources h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .sources ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sources li {
+            margin: 8px 0;
+        }
+
+        .sources a {
+            color: #667eea;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .sources a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            .header {
+                padding: 30px 20px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 公司文化与职位匹配分析报告</h1>
+            <div class="subtitle">AI驱动的职业发展决策支持</div>
+            <div class="timestamp">生成时间: 2026-01-12 12:10:58</div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h1>第一部分：公司文化分析</h1>
+                <h3>XX科技公司文化分析报告</h3>
+<h4>一、公司氛围</h4>
+<p>
+XX科技是一家充满活力的互联网公司，工作氛围积极向上。员工普遍反映团队协作良好，同事关系融洽。 
+</p>
+<p>
+工作环境：开放式办公环境，设施现代化 
+团队氛围：扁平化管理，沟通顺畅 
+工作压力：中等，偶尔需要加班赶项目 
+</p>
+<h4>二、企业员工文化</h4>
+<p>
+公司重视员工个人发展和技能提升。 
+</p>
+<p>
+员工发展： 
+</p>
+<ul>
+<li>提供内部培训和外部学习机会</li>
+<li>定期技术分享会</li>
+<li>清晰的晋升通道（P序列和M序列）</li>
+</ul>
+<p>
+薪资福利： 
+</p>
+<ul>
+<li>具有竞争力的薪资</li>
+<li>五险一金</li>
+<li>年终奖（1-3个月）</li>
+<li>餐补、交通补</li>
+</ul>
+<p>
+工作生活平衡： 
+</p>
+<ul>
+<li>弹性工作制</li>
+<li>偶尔周末加班</li>
+<li>年假15天起</li>
+</ul>
+<h4>三、面试流程与经验</h4>
+<p>
+面试流程： 
+</p>
+<ol>
+<li>HR电话面试（30分钟）</li>
+<li>技术笔试（在线编程）</li>
+<li>技术面试（两轮，各1小时）</li>
+<li>HR面试（30分钟）</li>
+<li>综合面试（部门负责人，30分钟）</li>
+</ol>
+<p>
+面试内容： 
+</p>
+<ul>
+<li>编程题：算法和数据结构</li>
+<li>框架题：Django/Flask使用经验</li>
+<li>数据库：SQL和优化</li>
+<li>系统设计：小型系统架构</li>
+</ul>
+<p>
+注意事项： 
+</p>
+<ul>
+<li>准备充分的算法题练习</li>
+<li>了解公司业务和技术栈</li>
+<li>准备项目经验介绍</li>
+</ul>
+<h4>四、关键发现</h4>
+<p>
+正面： 
+✓ 技术氛围浓厚，学习机会多 
+✓ 晋升通道清晰 
+✓ 薪资待遇有竞争力 
+</p>
+<p>
+负面： 
+✗ 加班文化存在 
+✗ 部门业务压力大 
+</p>
+<h4>五、建议总结</h4>
+<p>
+XX科技适合追求技术成长的候选人，公司提供良好的学习平台和晋升机会。但需要注意工作压力和加班情况。 
+</p>
+                <h3>数据来源</h3><ul><li><a href='https://www.kanzhun.com/pl/example1' target='_blank'>https://www.kanzhun.com/pl/example1</a></li><li><a href='https://www.jobui.com/company/example2' target='_blank'>https://www.jobui.com/company/example2</a></li></ul>
+            </div>
+
+            <div class="section">
+                <h1>第二部分：职位匹配分析与面试建议</h1>
+                <h3>职位匹配分析与面试建议</h3>
+<h4>一、职位定位分析</h4>
+<p>
+该职位是XX科技的核心后端开发岗位，负责公司主要业务系统的开发和维护。 
+</p>
+<p>
+职位重要性：★★★★☆ 
+</p>
+<ul>
+<li>直接影响公司核心业务</li>
+<li>技术挑战较高</li>
+<li>晋升空间大</li>
+</ul>
+<p>
+核心职责： 
+</p>
+<ul>
+<li>后端API开发</li>
+<li>系统性能优化</li>
+<li>技术方案设计</li>
+<li>代码审查和指导</li>
+</ul>
+<p>
+发展空间： 
+</p>
+<ul>
+<li>技术路线：高级工程师 → 架构师 → 技术专家</li>
+<li>管理路线：技术组长 → 技术经理 → 技术总监</li>
+</ul>
+<h4>二、匹配度评估</h4>
+<h5>技能匹配度</h5>
+<p>
+评分: 85/100 
+</p>
+<p>
+完全匹配： 
+✓ Python语言（5年经验） 
+✓ Django框架（熟练） 
+✓ MySQL数据库（熟练） 
+✓ Redis缓存（熟悉） 
+✓ Git版本控制（熟练） 
+</p>
+<p>
+部分匹配： 
+~ FastAPI（有经验但不够深入） 
+~ 微服务架构（有经验但项目规模较小） 
+</p>
+<p>
+需提升： 
+✗ Kafka消息队列（无经验） 
+✗ Kubernetes容器编排（了解但不熟练） 
+</p>
+<h5>经验匹配度</h5>
+<p>
+评分: 90/100 
+</p>
+<p>
+✓ 5年Python后端开发经验（符合3-5年要求） 
+✓ 互联网公司背景 
+✓ 核心系统开发经验 
+✓ 团队协作和代码审查经验 
+</p>
+<h5>文化匹配度</h5>
+<p>
+评分: 80/100 
+</p>
+<p>
+✓ 技术学习意愿强（符合公司技术氛围） 
+✓ 接受弹性工作制 
+✓ 有技术分享习惯 
+</p>
+<p>
+⚠ 需要注意：对加班的接受度 
+</p>
+<h5>综合匹配度</h5>
+<p>
+总分: 85/100 
+评级: 良好 
+</p>
+<h4>三、职业发展利弊分析</h4>
+<h5>优势</h5>
+<ol>
+<li>技术成长：公司技术氛围浓厚，可以学习前沿技术</li>
+<li>职业发展：清晰的晋升通道，技术+管理双路径</li>
+<li>薪资提升：预期薪资涨幅20-30%</li>
+<li>项目经验：有机会参与大规模分布式系统</li>
+</ol>
+<h5>风险</h5>
+<ol>
+<li>加班文化：可能影响工作生活平衡</li>
+<li>技能单一：长期专注后端可能导致技能单一</li>
+<li>跳槽限制：垂直领域跳槽选择较少</li>
+</ol>
+<h5>发展建议</h5>
+<p>
+✓ 建议接受该offer 
+</p>
+<ul>
+<li>技术匹配度高（85分）</li>
+<li>职业发展空间大</li>
+<li>薪资有竞争力</li>
+</ul>
+<p>
+⚠ 需要注意： 
+</p>
+<ul>
+<li>入职后尽快学习Kafka和K8s</li>
+<li>关注工作生活平衡</li>
+<li>定期更新简历保持竞争力</li>
+</ul>
+<h4>四、面试准备清单</h4>
+<h5>需要准备回答的问题</h5>
+<p>
+技术问题： 
+</p>
+<ol>
+<li>Django的MTV架构是什么？如何工作？</li>
+<li>如何优化数据库查询性能？</li>
+<li>Redis缓存穿透、击穿、雪崩如何解决？</li>
+<li>微服务架构的优缺点？</li>
+<li>如何设计一个高并发系统？</li>
+<li>Python的GIL是什么？如何避免？</li>
+<li>RESTful API设计原则？</li>
+<li>如何处理事务并发问题？</li>
+</ol>
+<p>
+行为面试问题（STAR法则）： 
+</p>
+<ol>
+<li>介绍一个你参与的最有挑战性的项目</li>
+</ol>
+<ul>
+<li>Situation: 项目背景</li>
+<li>Task: 你的任务</li>
+<li>Action: 你采取的行动</li>
+<li>Result: 项目成果</li>
+</ul>
+<ol>
+<li>如何处理团队中的技术分歧？</li>
+<li>遇到的技术难题如何解决？</li>
+<li>为什么想离开现在的公司？</li>
+</ol>
+<p>
+文化匹配问题： 
+</p>
+<ol>
+<li>你如何看待加班？</li>
+<li>你的职业规划是什么？</li>
+<li>为什么选择我们公司？</li>
+</ol>
+<p>
+薪资问题： 
+</p>
+<ul>
+<li>当前薪资结构</li>
+<li>期望薪资（建议涨幅20-30%）</li>
+</ul>
+<h5>建议提问面试官的问题</h5>
+<p>
+职位相关问题： 
+</p>
+<ol>
+<li>该职位的核心挑战是什么？</li>
+<li>团队目前的技术栈和架构是怎样的？</li>
+<li>新人入职后会有哪些培训和指导？</li>
+</ol>
+<p>
+团队和项目问题： 
+</p>
+<ol>
+<li>团队目前有多少人？如何协作？</li>
+<li>正在进行的项目有哪些？我在其中会负责什么？</li>
+<li>团队的技术氛围如何？有技术分享吗？</li>
+</ol>
+<p>
+公司战略问题： 
+</p>
+<ol>
+<li>公司未来1-3年的技术发展方向？</li>
+<li>该业务在公司整体战略中的位置？</li>
+</ol>
+<p>
+员工发展问题： 
+</p>
+<ol>
+<li>晋升机制是怎样的？考核标准是什么？</li>
+<li>团队成员的平均职业发展路径？</li>
+<li>有哪些学习和成长的机会？</li>
+</ol>
+<h5>面试策略</h5>
+<p>
+突出优势： 
+</p>
+<ol>
+<li>强调5年Python后端经验</li>
+<li>详细介绍性能优化项目案例</li>
+<li>展示对技术栈的深入理解</li>
+</ol>
+<p>
+弥补短板： 
+</p>
+<ol>
+<li>对Kafka和K8s说明学习计划</li>
+<li>强调快速学习能力（如之前学习FastAPI）</li>
+</ol>
+<p>
+展示文化契合： 
+</p>
+<ol>
+<li>表达对技术的热情</li>
+<li>分享技术博客或开源项目</li>
+<li>询问团队技术活动</li>
+</ol>
+<p>
+注意事项： 
+</p>
+<ul>
+<li>准备充分的算法题（LeetCode中等题）</li>
+<li>带着问题去面试（显示主动性）</li>
+<li>展示谦逊好学的态度</li>
+<li>不要过度夸大，保持诚实</li>
+</ul>
+<h4>五、最终建议</h4>
+<p>
+综合评估：★★★★☆ 强烈建议接受 
+</p>
+<p>
+该职位与你的技能匹配度高（85分），职业发展空间大，薪资有竞争力。虽然存在加班和技能单一化的风险，但通过合理规划可以规避。 
+</p>
+<p>
+建议： 
+✓ 接受该offer 
+✓ 入职后3个月内掌握Kafka和K8s 
+✓ 保持学习习惯，定期更新技能 
+✓ 1年后评估职业发展情况 
+</p>
+<p>
+祝你面试成功！🎯 
+</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>本报告由AI自动生成，仅供参考。建议结合实际情况做出最终决策。</p>
+            <p>🤖 Generated with Company Culture & Position Analysis Tool</p>
+        </div>
+    </div>
+</body>
+</html>
