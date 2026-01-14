@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **Company Culture & Position Analysis Tool** (公司文化及职位解析工具) - an AI-powered career decision support tool for job seekers in China. It analyzes company culture from employee reviews and provides position matching analysis with interview preparation suggestions.
 
+**Two Tools in One Repository:**
+1. **单公司分析工具** (main.py) - Analyze one company at a time
+2. **批量处理工具** (batch_tool_main.py) - Batch process multiple companies with ranking
+
 ### Core Workflow
 
 1. **MHTML File Reading** → Read employee reviews from MHTML files (browser-saved webpages)
@@ -25,38 +29,83 @@ pip install -r requirements.txt
 # Set API key (required for AI analysis)
 set ZHIPU_API_KEY=your-api-key
 
-# Run the application
+# Run single-company analysis tool
 python main.py
+
+# Run batch processing tool
+python batch_tool_main.py
+
+# Run batch tool with startup script
+批量工具启动.bat
 ```
 
-### Testing MHTML Reader
+### Testing
 
 ```bash
 # Test MHTML parsing functionality
 python test_mhtml_read.py
+
+# Run batch tool automated tests
+cd tests2
+python test_test.py
+
+# Quick method validation test
+cd tests2
+python quick_test.py
 ```
 
-### Building Executable
+### Building Executables
 
 ```bash
-# Build Windows EXE using PyInstaller
+# Build single-company tool EXE
 build_exe.bat
-
 # Output: dist/公司文化职位解析工具.exe (~210 MB)
+
+# Build batch processing tool EXE
+build_batch_tool_exe.bat
+# Output: dist/批量职位解析工具.exe (~50 MB)
 ```
 
-**Important**: Always test the application with `python main.py` before rebuilding the EXE. User rule: "修改完成之后先自测，通过之后再生成exe"
+**Important**: Always test with Python before rebuilding EXE. User rule: "修改完成之后先自测,通过之后再生成exe"
 
 ## Architecture
 
 ### Core Modules
 
-**main.py** - Tkinter GUI application
-- Orchestrates all modules
+**Single-Company Tool (main.py)** - Original tool for analyzing one company
+- Orchestrates all modules for single company
 - Manages configuration persistence (`config.json`)
-- Runs analysis in background threads to avoid UI blocking
-- Window geometry: 900x770 (optimized after removing title)
-- Data source frame padding: 5px (reduced for compact UI)
+- Runs analysis in background threads
+- Window geometry: 900x770
+
+**batch_tool_main.py** - Batch processing GUI application
+- Batch processes multiple companies in one run
+- Cache management with smart checking
+- Progress tracking and user confirmation dialogs
+- Compact UI without title banner
+- Generates comprehensive ranking report
+
+**batch_processor.py** - Batch processing core logic
+- Orchestrates batch analysis workflow
+- Implements cache checking logic
+- Progress callback system
+- Calls single-company analysis for each company
+- Generates ranking reports using AI
+
+**ai_client.py** - AI client (Anthropic compatible)
+- Connects to Zhipu AI GLM-4.7 via Anthropic-compatible API
+- Reads API key from environment variable `ZHIPU_API_KEY`
+- Logs all AI calls to `logs2/` with full metadata
+
+**ranking_report_generator.py** - Ranking report generator
+- Creates comprehensive ranking HTML reports
+- Line-by-line Markdown to HTML conversion (not regex-based)
+- **Table hyperlink injection** (`_add_links_to_table()` method, lines 359-484):
+  - Adds clickable company names linking to individual reports
+  - Adds "JD链接" column with links to jd.txt files
+  - Intelligent company name matching (exact, simplified, partial)
+  - Proper HTML table cell wrapping with `<td>` tags
+- Handles both 2-tuple `(company, report)` and 3-tuple `(company, report, jd)` data structures
 
 **mhtml_reader.py** - MHTML file parsing
 - **Critical**: Supports quoted-printable encoding (Chrome-saved MHTML files)
@@ -86,6 +135,7 @@ build_exe.bat
 
 ### Data Flow
 
+**Single-Company Tool (main.py):**
 ```
 User Input (GUI)
   ↓
@@ -102,12 +152,39 @@ ReportGenerator → HTML Report
 Auto-open in browser
 ```
 
+**Batch Processing Tool (batch_tool_main.py):**
+```
+User Input (Multiple Companies in Directory)
+  ↓
+For Each Company:
+  MHTMLReader → MHTML Files → Extracted Reviews
+  ↓
+  AIAnalyzer → Company Culture Analysis
+  ↓
+  AIAnalyzer → Position Match Analysis (Culture + Resume + JD)
+  ↓
+  ReportGenerator → Company Report (includes JD content)
+  ↓
+AIClient → Read All Company Reports → Generate Ranking
+  ↓
+RankingReportGenerator → Comprehensive Ranking Report
+  ↓
+Display: Individual Reports + Ranking Report with Links
+```
+
 ### Configuration
 
 - **Environment Variables**: `ZHIPU_API_KEY` (required)
-- **Config File**: `config.json` (auto-generated, stores user inputs)
+- **Single-Company Config**: `config.json` (auto-generated, stores user inputs)
   - Fields: 'mhtml_folder', 'resume_path', 'job_description', 'output_path'
-- **Prompts**: `prompts/` directory contains Markdown templates for AI analysis
+- **Batch Tool Config**: `batch_config.json` (auto-generated)
+  - Fields: 'companies_dir', 'resume_path', 'output_dir'
+- **Prompts**:
+  - `prompts/` - Single-company tool prompts
+  - `prompts2/` - Batch tool prompts (综合评估与排名.txt)
+- **Logs**:
+  - `logs/` - Single-company tool AI call logs
+  - `logs2/` - Batch tool AI call logs
 
 ### Critical Implementation Details
 
@@ -174,16 +251,27 @@ Uses `--collect-all selenium` to ensure all Selenium dependencies are included.
 
 ## Recent Changes (v2.0+)
 
+### Batch Processing Tool (New in v1.2)
+- **Batch Analysis**: Process multiple companies in one run
+- **Smart Caching**: Skip already-generated reports, with user confirmation
+- **Ranking Report**: AI-generated comprehensive ranking with scores, pros/cons, recommendations
+- **JD Display**: Shows full job description in each company report
+- **Compact GUI**: No title banner, clean layout with explanations below inputs
+
 ### Removed Features
-- **Web scraping**: Completely removed `web_scraper.py` import and URL input functionality
-- **Title label**: Removed from GUI to save space
+- **Web scraping**: Completely removed `web_scraper.py` import and URL input functionality (v1.6+)
+- **Title label**: Removed from single-company GUI to save space
+- **Redundant bottom links**: Ranking report no longer shows company report links at bottom (v2.1)
 
 ### Added Features
-- **MHTML file reading**: Replaced web scraping with local MHTML file reading
+- **MHTML file reading**: Replaced web scraping with local MHTML file reading (v1.6)
 - **Time-weighted analysis**: Prompts now prioritize recent comments over older ones
 - **Interview answer generation**: AI provides reference answers based on resume + JD
 - **Bilingual support**: If JD is English, provides both Chinese and English interview answers
 - **Compact UI**: Reduced frame padding and window height for better space utilization
+- **Batch processing**: Process multiple companies with ranking report (v1.2)
+- **Table hyperlinks**: Ranking report table includes clickable company names and JD links (v2.1)
+- **Deep stability analysis**: AI detects outsourcing, hidden layoff tactics, salary traps (v2.1)
 
 ### Prompt Enhancements
 - **Company Culture Analysis**: Now includes detailed analysis of:

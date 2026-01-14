@@ -462,12 +462,32 @@ class PositionAnalysisTool:
             # 步骤5: 生成HTML报告
             self._append_log("\n生成HTML报告...")
             self._append_log(f"  输出路径: {output_path}")
+
+            # 提取公司名称(从MHTML文件的title中获取)
+            company_names = []
+            for mhtml_file in mhtml_files:
+                try:
+                    result = mhtml_reader.read_mhtml_file(str(mhtml_file))
+                    if result and result.get('title'):
+                        # 从title中提取公司名称(通常在title开头)
+                        title = result['title']
+                        # 简单的提取逻辑:取title的前20个字符作为公司名
+                        company_name = title[:20].strip()
+                        if company_name and company_name not in company_names:
+                            company_names.append(company_name)
+                except:
+                    pass
+
+            # 如果没有提取到公司名,使用默认值
+            company_name = company_names[0] if company_names else "目标公司"
+
             try:
                 self.generator.generate_html_report(
                     culture_analysis,
                     match_analysis,
                     successful_files,  # 使用文件名而不是URLs
-                    output_path
+                    output_path,
+                    company_name  # 传递公司名称
                 )
                 self._append_log(f"  ✓ 报告已保存: {output_path}")
             except Exception as e:

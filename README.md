@@ -45,7 +45,7 @@ AI驱动的职业决策辅助工具，帮助求职者全面了解公司文化和
 
 1. **克隆或下载项目**
    ```bash
-   cd C:\D\CAIE_tool\MyAIProduct\postion
+   cd C:\D\CAIE_tool\MyAIProduct\position
    ```
 
 2. **安装依赖**
@@ -128,25 +128,44 @@ AI驱动的职业决策辅助工具，帮助求职者全面了解公司文化和
 ## 项目结构
 
 ```
-postion/
+position/
 ├── main.py                    # GUI主程序
 ├── web_scraper.py            # 网页抓取模块
 ├── ai_analyzer.py            # AI分析模块
 ├── resume_parser.py          # 简历解析模块
 ├── report_generator.py       # 报告生成模块
+├── mhtml_reader.py           # MHTML文件读取模块
+├── check_report.py           # 报告检查工具
 ├── prompts/                  # 提示词模板
 │   ├── company_culture_analysis.txt
 │   └── position_match_analysis.txt
-├── logs/                     # 日志文件
-├── tests/                    # 测试文件
-│   ├── test_all_modules.py
-│   └── 测试检查清单.md
-├── output/                   # 报告输出目录
+├── logs/                     # 日志文件目录
+├── userdata/                 # 用户数据目录
 ├── requirements.txt          # 依赖包列表
 ├── 启动工具.bat              # 启动脚本
 ├── build_exe.bat             # 构建脚本
+├── CLAUDE.md                 # Claude Code 项目指南
 └── README.md                 # 本文件
 ```
+
+**说明:**
+- `build/` 和 `dist/` 目录由构建脚本生成，已加入 .gitignore
+- `*.spec` 文件是 PyInstaller 自动生成的配置文件，已加入 .gitignore
+- 临时文件和构建产物不会被提交到 Git
+
+### .gitignore 配置
+
+项目使用以下 .gitignore 规则：
+
+```
+userdata/       # 用户数据目录
+dist/           # 构建输出目录
+build/          # 构建临时目录
+*.spec          # PyInstaller 配置文件
+nul             # Windows 空设备文件
+```
+
+这样可以确保只提交源代码和配置文件，不包含构建产物和用户数据。
 
 ## 技术架构
 
@@ -156,6 +175,7 @@ postion/
    - 使用Selenium处理动态内容
    - 智能滚动加载
    - 超时和错误处理
+   - 支持 MHTML 格式读取
 
 2. **AIAnalyzer** - AI分析
    - 使用Anthropic兼容接口调用GLM-4.6
@@ -163,7 +183,7 @@ postion/
    - 内容长度自适应
 
 3. **ResumeParser** - 简历解析
-   - 多格式支持
+   - 多格式支持（PDF/Word/TXT）
    - 编码自动检测
 
 4. **ReportGenerator** - 报告生成
@@ -171,15 +191,27 @@ postion/
    - 精美CSS样式
    - 响应式设计
 
+5. **MHTMLReader** - MHTML读取
+   - 支持读取已保存的 MHTML 文件
+   - 可离线分析已保存的网页内容
+
 ### 技术栈
 
 - **GUI**: Tkinter (Python标准库)
 - **网页抓取**: Selenium 4.15+
-- **AI接口**: Anthropic SDK (GLM-4.6)
+- **AI接口**: ZhipuAI SDK (GLM-4.6)
 - **文档解析**: PyPDF2, python-docx
 - **日志**: Python logging
+- **构建工具**: PyInstaller
 
 ## 测试
+
+### 测试工具
+
+项目包含以下测试工具：
+
+- `check_report.py` - 报告检查工具
+- `test_mhtml_read.py` - MHTML 读取测试
 
 ### 运行测试
 
@@ -187,8 +219,9 @@ postion/
 # 设置API Key
 set ZHIPU_API_KEY=your-api-key
 
-# 运行所有测试
-python tests/test_all_modules.py
+# 运行测试
+python check_report.py
+python test_mhtml_read.py
 ```
 
 ### 测试覆盖
@@ -196,9 +229,8 @@ python tests/test_all_modules.py
 - ✓ 简历解析（TXT/PDF/Word）
 - ✓ 报告生成（HTML）
 - ✓ AI分析（需要API Key）
-- ✓ 集成测试
-
-详细测试清单: `tests/测试检查清单.md`
+- ✓ MHTML 文件读取
+- ✓ 网页抓取（需要Chrome）
 
 ## 构建可执行程序
 
@@ -366,17 +398,25 @@ dist\公司文化职位解析工具.exe
 ### 构建输出目录说明
 
 ```
-postion/
-├── build/                      # 构建临时文件
+position/
+├── build/                      # 构建临时文件（已加入 .gitignore）
 │   └── 公司文化职位解析工具/
+│       ├── Analysis-00.toc    # 分析文件
+│       ├── EXE-00.toc         # EXE文件表
+│       ├── PKG-00.toc         # 包文件表
+│       ├── PYZ-00.pyz         # Python归档
 │       ├── warn-*.txt         # 警告信息
-│       └── xref-*.html        # 依赖关系图
-├── dist/                       # 最终输出
+│       ├── xref-*.html        # 依赖关系图
+│       └── *.pkg              # PyInstaller中间打包文件（约220MB）
+├── dist/                       # 最终输出（已加入 .gitignore）
 │   └── 公司文化职位解析工具.exe  ← 可执行文件
-└── 公司文化职位解析工具.spec    # PyInstaller配置文件
+└── *.spec                      # PyInstaller配置文件（已加入 .gitignore）
 ```
 
-**注意**: `build/` 和 `dist/` 目录会在每次构建时重新生成。
+**注意:**
+- `build/` 和 `dist/` 目录会在每次构建时重新生成
+- `.pkg` 文件是 PyInstaller 的中间打包文件，用于生成最终的 .exe
+- 这些目录和文件已加入 .gitignore，不会被提交到 Git
 
 ---
 
@@ -513,6 +553,20 @@ setx ZHIPU_API_KEY "your-api-key"
 
 ## 更新日志
 
+### v1.6 (2026-01-12)
+- ✓ 实现 MHTML 文件读取功能
+- ✓ 支持离线分析已保存的网页
+- ✓ 优化用户界面
+- ✓ 添加配置持久化
+
+### v1.5 (2026-01-12)
+- ✓ 添加文件夹选择功能
+- ✓ 改进文件处理流程
+
+### v1.4 (2026-01-12)
+- ✓ 添加 MHTML 功能
+- ✓ 改进网页抓取稳定性
+
 ### v1.0 (2026-01-12)
 - ✓ 实现所有核心功能
 - ✓ 网页抓取支持动态内容
@@ -531,8 +585,10 @@ setx ZHIPU_API_KEY "your-api-key"
 ## 联系方式
 
 如有问题或建议，请通过以下方式联系:
-- 项目路径: `C:\D\CAIE_tool\MyAIProduct\postion`
-- 查看测试文档: `tests/测试检查清单.md`
+- 项目路径: `C:\D\CAIE_tool\MyAIProduct\position`
+- 查看 CLAUDE.md 了解项目配置和开发指南
+- 查看 MHTML功能使用说明.md 了解 MHTML 功能
+- 查看各种 EXE更新报告 了解版本更新详情
 
 ---
 
